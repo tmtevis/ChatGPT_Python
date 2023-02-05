@@ -458,7 +458,7 @@ def main():
     )
     args = parser.parse_args()
     # Initialize chatbot
-    chatbot = Chatbot(api_key="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")    # put your API key here
+    chatbot = Chatbot(api_key="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")    # put your API key here
     # Start chat
     while True:
         try:
