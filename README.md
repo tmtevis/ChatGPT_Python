@@ -1,7 +1,9 @@
 # ChatGPT_Python
+
 Interacting with ChatGPT via Python using voice-to-text or just text chat!
 
 **Requirements:**
+
 ChatGPT API Key: https://platform.openai.com/account/api-keys
 
 Python 3.10 installed and added to PATH: https://www.python.org/downloads/windows/
@@ -9,6 +11,7 @@ Python 3.10 installed and added to PATH: https://www.python.org/downloads/window
 Pip3 v23.0: https://pip.pypa.io/en/stable/installation/
 
 **Python Setup:**
+
   Use "pip install --upgrade <library>" for the following:
     
     - openai
@@ -23,6 +26,7 @@ Pip3 v23.0: https://pip.pypa.io/en/stable/installation/
 
   
 **General Use:**
+  
   1. Obtain an API key from the link above
   
   2. Place the API key in a text file called api-key.txt in the source directory
