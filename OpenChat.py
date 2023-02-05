@@ -5,6 +5,7 @@ import argparse
 import json
 import os
 import sys
+import threading
 from datetime import date
 
 try:
@@ -22,6 +23,7 @@ except ImportError:
     import openai
     import tiktoken
 
+mode = ""
 r = sr.Recognizer()
 
 ENGINE = os.environ.get("GPT_ENGINE") or "text-chat-davinci-002-20221122"
@@ -382,7 +384,11 @@ class Conversation:
 
 def main():
 
+    def promptCommandCheck(prompt):
+        print("test")
+
     def textChatGPT():
+        global mode
         while True:
             try:
                 prompt = input("\nPrompt (or !help for available commands):   ")
@@ -392,6 +398,9 @@ def main():
             if prompt.startswith("!"):
                 if chatbot_commands(prompt):
                     continue
+            if "!switch-to-voice" in prompt:     # switch to voice input
+                mode = "1"
+                break
             if not args.stream:
                 response = chatbot.ask(prompt, temperature=args.temperature)
                 print("ChatGPT: " + response["choices"][0]["text"])
@@ -405,6 +414,7 @@ def main():
 
     
     def voiceChatGPT():
+        global mode
         while True:
             try:
                 with sr.Microphone() as source:
@@ -412,11 +422,13 @@ def main():
                     prompt_audio = r.listen(source, timeout=None)
                     try:
                         prompt = r.recognize_google(prompt_audio)
-                        if(prompt == "stop listening"):     # add other command phrases here such as opening webpages
+                        if "stop listening" in prompt:     # add other command phrases here such as opening webpages
                             print("\nExiting...")
+                            mode = ""
                             break
-                        if(prompt == "text input"):     # switch to text input for using built-in commands such as saving
-                            prompt = input("\nPrompt:   ")
+                        if "switch to text" in prompt:     # switch to text input for using built-in commands such as saving
+                            mode = "2"
+                            break
                     except:
                         print("Sorry, I didn't understand that.")
             except KeyboardInterrupt:
@@ -441,6 +453,7 @@ def main():
         if cmd == "!help":
             print(
                 """
+            !switch-to-voice - Switch to voice interaction
             !help - Display this message
             !rollback - Rollback chat history
             !reset - Reset chat history
@@ -483,17 +496,39 @@ def main():
         with open("api-key.txt", "w+") as file:
             file.write(key)
 
+    parser = argparse.ArgumentParser()
+    # parser.add_argument(
+    #     "--api_key",
+    #     type=str,
+    #     required=True,
+    #     help="OpenAI API key",
+    # )
+    parser.add_argument(
+        "--stream",
+        action="store_true",
+        help="Stream response",
+    )
+    parser.add_argument(
+        "--temperature",
+        type=float,
+        default=0.5,
+        help="Temperature for response",
+    )
+    args = parser.parse_args()
     
     #########################################################
     ##  Initialize ChatGPT
     #########################################################
     chatbot = Chatbot(api_key=key)    # put your API key here
     # Start chat
-    mode = input("\nSelect Input Mode\nEnter 1 for Voice\nEnter 2 for Text\n\nMode:   ")
-    if(mode == "1"):
-        voiceChatGPT()
-    elif(mode == "2"):
-        textChatGPT()
+    while(True):
+        global mode
+        if(mode==""):
+            mode = input("\nSelect Input Mode\nEnter 1 for Voice\nEnter 2 for Text\n\nMode:   ")
+        if(mode == "1"):
+            voiceChatGPT()
+        elif(mode == "2"):
+            textChatGPT()
     ##########################################################
 
 if __name__ == "__main__":
