@@ -1,2 +1,6 @@
+<<<<<<< HEAD
 api-key.txt
-/Generated-Scripts/*
+/Generated-Scripts
+=======
+Generated_Scripts/
+>>>>>>> parent of 3a1675b (Revert "Create .gitignore")
