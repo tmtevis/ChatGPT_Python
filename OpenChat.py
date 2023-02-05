@@ -7,9 +7,20 @@ import os
 import sys
 from datetime import date
 
-import speech_recognition as sr
-import openai
-import tiktoken
+try:
+    import speech_recognition as sr
+    import openai
+    import tiktoken
+except ImportError:
+    import pip
+    pip.main(['install', 'speech_recognition'])
+    pip.main(['install', 'PyAudio'])
+    pip.main(['install', 'openai'])
+    pip.main(['install', 'tiktoken'])
+    pip.main(['install', 'pre-commit'])
+    import speech_recognition as sr
+    import openai
+    import tiktoken
 
 r = sr.Recognizer()
 
@@ -374,7 +385,7 @@ def main():
     def textChatGPT():
         while True:
             try:
-                prompt = input("\nPrompt:   ")
+                prompt = input("\nPrompt (or !help for available commands):   ")
             except KeyboardInterrupt:
                 print("\nExiting...")
                 sys.exit()
@@ -461,27 +472,6 @@ def main():
             return False
         return True
 
-    # Get API key from command line
-    parser = argparse.ArgumentParser()
-    # parser.add_argument(
-    #     "--api_key",
-    #     type=str,
-    #     required=True,
-    #     help="OpenAI API key",
-    # )
-    parser.add_argument(
-        "--stream",
-        action="store_true",
-        help="Stream response",
-    )
-    parser.add_argument(
-        "--temperature",
-        type=float,
-        default=0.5,
-        help="Temperature for response",
-    )
-    args = parser.parse_args()
-    
     # Pulls API token from file
     try:
         with open("api-key.txt", "r") as file:
