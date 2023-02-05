@@ -466,19 +466,22 @@ def main():
     while True:
         try:
             with sr.Microphone() as source:
-                print("Listening...")
-                prompt_audio = r.listen(source, timeout=5)
+                print("Speak your prompt, or say 'Stop Listening' to QUIT...")
+                prompt_audio = r.listen(source, timeout=None)
                 try:
                     prompt = r.recognize_google(prompt_audio)
+                    if(prompt == "stop listening"):
+                        break
                 except:
                     print("Sorry, I didn't understand that.")
+                    
             # prompt = input("\nPrompt:   ")
         except KeyboardInterrupt:
             print("\nExiting...")
             sys.exit()
-        if prompt.startswith("!"):
-            if chatbot_commands(prompt):
-                continue
+        # if prompt.startswith("!"):
+        #     if chatbot_commands(prompt):
+        #         continue
         if not args.stream:
             response = chatbot.ask(prompt, temperature=args.temperature)
             print("ChatGPT: " + response["choices"][0]["text"])
