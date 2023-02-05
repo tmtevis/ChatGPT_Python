@@ -470,8 +470,11 @@ def main():
                 prompt_audio = r.listen(source, timeout=None)
                 try:
                     prompt = r.recognize_google(prompt_audio)
-                    if(prompt == "stop listening"):
+                    if(prompt == "stop listening"):     # add other command phrases here such as opening webpages
+                        print("\nExiting...")
                         break
+                    if(prompt == "text input"):     # switch to text input for using built-in commands such as saving conversations
+                        prompt = input("\nPrompt:   ")
                 except:
                     print("Sorry, I didn't understand that.")
                     
