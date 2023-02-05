@@ -465,38 +465,56 @@ def main():
         key = file.read().strip()
     chatbot = Chatbot(api_key=key)    # put your API key here
     # Start chat
-    while True:
-        try:
-        #     with sr.Microphone() as source:
-        #         print("Speak your prompt, or say 'Stop Listening' to QUIT...")
-        #         prompt_audio = r.listen(source, timeout=None)
-        #         try:
-        #             prompt = r.recognize_google(prompt_audio)
-        #             if(prompt == "stop listening"):     # add other command phrases here such as opening webpages
-        #                 print("\nExiting...")
-        #                 break
-        #             if(prompt == "text input"):     # switch to text input for using built-in commands such as saving
-        #                 prompt = input("\nPrompt:   ")
-        #         except:
-        #             print("Sorry, I didn't understand that.")
-                    
-            prompt = input("\nPrompt:   ")
-        except KeyboardInterrupt:
-            print("\nExiting...")
-            sys.exit()
-        # if prompt.startswith("!"):
-        #     if chatbot_commands(prompt):
-        #         continue
-        if not args.stream:
-            response = chatbot.ask(prompt, temperature=args.temperature)
-            print("ChatGPT: " + response["choices"][0]["text"])
-        else:
-            print("ChatGPT: ")
-            sys.stdout.flush()
-            for response in chatbot.ask_stream(prompt, temperature=args.temperature):
-                print(response, end="")
+    mode = input("\nSelect Input Mode\nEnter 1 for Voice\nEnter 2 for Text\n\nMode:   ")
+    if(mode == "1"):
+        while True:
+            try:
+                with sr.Microphone() as source:
+                    print("Speak your prompt, or say 'Stop Listening' to QUIT...")
+                    prompt_audio = r.listen(source, timeout=None)
+                    try:
+                        prompt = r.recognize_google(prompt_audio)
+                        if(prompt == "stop listening"):     # add other command phrases here such as opening webpages
+                            print("\nExiting...")
+                            break
+                        if(prompt == "text input"):     # switch to text input for using built-in commands such as saving
+                            prompt = input("\nPrompt:   ")
+                    except:
+                        print("Sorry, I didn't understand that.")
+            except KeyboardInterrupt:
+                print("\nExiting...")
+                sys.exit()
+            if not args.stream:
+                response = chatbot.ask(prompt, temperature=args.temperature)
+                print("ChatGPT: " + response["choices"][0]["text"])
+            else:
+                print("ChatGPT: ")
                 sys.stdout.flush()
-            print()
+                for response in chatbot.ask_stream(prompt, temperature=args.temperature):
+                    print(response, end="")
+                    sys.stdout.flush()
+                print()
+    
+    elif(mode == "2"):
+        while True:
+            try:
+                prompt = input("\nPrompt:   ")
+            except KeyboardInterrupt:
+                print("\nExiting...")
+                sys.exit()
+            if prompt.startswith("!"):
+                if chatbot_commands(prompt):
+                    continue
+            if not args.stream:
+                response = chatbot.ask(prompt, temperature=args.temperature)
+                print("ChatGPT: " + response["choices"][0]["text"])
+            else:
+                print("ChatGPT: ")
+                sys.stdout.flush()
+                for response in chatbot.ask_stream(prompt, temperature=args.temperature):
+                    print(response, end="")
+                    sys.stdout.flush()
+                print()
 
 
 if __name__ == "__main__":
