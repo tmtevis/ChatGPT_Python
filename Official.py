@@ -7,8 +7,11 @@ import os
 import sys
 from datetime import date
 
+import speech_recognition as sr
 import openai
 import tiktoken
+
+r = sr.Recognizer()
 
 ENGINE = os.environ.get("GPT_ENGINE") or "text-chat-davinci-002-20221122"
 
@@ -458,11 +461,14 @@ def main():
     )
     args = parser.parse_args()
     # Initialize chatbot
-    chatbot = Chatbot(api_key="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")    # put your API key here
+    chatbot = Chatbot(api_key="")    # put your API key here
     # Start chat
     while True:
         try:
-            prompt = input("\nPrompt:   ")
+            with sr.Microphone() as source:
+                prompt_audio = r.listen(source)
+                prompt = r.recognize_google(prompt_audio)
+            # prompt = input("\nPrompt:   ")
         except KeyboardInterrupt:
             print("\nExiting...")
             sys.exit()
