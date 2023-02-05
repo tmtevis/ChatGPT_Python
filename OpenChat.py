@@ -410,9 +410,8 @@ def main():
     def promptCommandCheck(prompt):
         global mode
         createfile = "0"
-        commands = ["using python", "using C#", "using c sharp" "using html", "using javascript"]
-        filetypes = [".py", ".cs", ".cs", ".html", ".js"]
-
+        commands = ["using python", "using C#", "using c sharp" "using html", "using javascript", "using batch"]
+        filetypes = [".py", ".cs", ".cs", ".html", ".js", ".bat"]
 
         if prompt.startswith("!"):
             if chatbot_commands(prompt):
@@ -423,10 +422,32 @@ def main():
                 createfile = "1"
                 fileExt = filetypes[i]
 
-        if "!switch-to-voice" in prompt:     # switch to voice input
+        if "!switch-to-voice" in prompt:
             mode = "1"
+            print("\nSwitching to Voice...")
             return
         
+        if "switch to text" in prompt:
+            mode = "2"
+            print("\nSwitching to Text...")
+            return
+        
+        if "stop listening" in prompt:
+            print("\nExiting...")
+            mode = ""
+            return
+        
+        if "voice commands" in prompt:
+            print(
+                """
+            Available Voice Commands:
+            "stop listening" - stop listening and go back to main menu
+            "switch to text" - swap to text input for prompt
+            "using..." followed by "python" "c sharp" "javascript" "html" "batch" will generate timestamped files of usable code
+            """,
+            )
+            mode = ""
+            return
 
         if not args.stream:
             response = chatbot.ask(prompt, temperature=args.temperature)
@@ -449,7 +470,7 @@ def main():
 
     def textChatGPT():
         global mode
-        while True:
+        while (mode == "2"):
             try:
                 prompt = input("\nPrompt (or !help for available commands):   ")
                 promptCommandCheck(prompt)
@@ -457,37 +478,28 @@ def main():
                 print("\nExiting...")
                 sys.exit()
     
+
     def voiceChatGPT():
         global mode
-        while True:
+        while (mode == "1"):
             try:
                 with sr.Microphone() as source:
-                    print("Speak your prompt, or say 'Stop Listening' to QUIT...")
+                    print("Speak your prompt now...\nSay 'Voice Commands' to View Features\nSay 'Stop Listening' to Return to Main Menu...")
                     prompt_audio = r.listen(source, timeout=None)
                     try:
                         prompt = r.recognize_google(prompt_audio)
-                        if "stop listening" in prompt:     # add other command phrases here such as opening webpages
-                            print("\nExiting...")
-                            mode = ""
-                            break
-                        if "switch to text" in prompt:     # switch to text input for using built-in commands such as saving
-                            mode = "2"
-                            break
+                        promptCommandCheck(prompt)                  
                     except:
                         print("Sorry, I didn't understand that.")
             except KeyboardInterrupt:
                 print("\nExiting...")
                 sys.exit()
-            if not args.stream:
-                response = chatbot.ask(prompt, temperature=args.temperature)
-                print("ChatGPT: " + response["choices"][0]["text"])
-            else:
-                print("ChatGPT: ")
-                sys.stdout.flush()
-                for response in chatbot.ask_stream(prompt, temperature=args.temperature):
-                    print(response, end="")
-                    sys.stdout.flush()
-                print()
+            except sr.RequestError as e:
+                print("Could not request results from Google Speech Recognition service; {0}".format(e))
+            except sr.UnknownValueError:
+                print("Google Speech Recognition could not understand audio")
+            except OSError as e:
+                print("Microphone not found: {0}".format(e))
         
 
     def chatbot_commands(cmd: str) -> bool:
@@ -536,20 +548,16 @@ def main():
     try:
         with open("api-key.txt", "r") as file:
             key = file.read().strip()
+        file.close()
 
     # Saves your API token in file for next time
     except:
-        key = input("No API key found, please go to https://platform.openai.com/account/api-keys to generate one and paste it here to begin: ")
+        key = input("\nNo API key found, please go to https://platform.openai.com/account/api-keys to generate one and paste it here to begin: ")
         with open("api-key.txt", "w+") as file:
             file.write(key)
+        file.close()
 
     parser = argparse.ArgumentParser()
-    # parser.add_argument(
-    #     "--api_key",
-    #     type=str,
-    #     required=True,
-    #     help="OpenAI API key",
-    # )
     parser.add_argument(
         "--stream",
         action="store_true",
