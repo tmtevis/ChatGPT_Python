@@ -460,9 +460,19 @@ def main():
         help="Temperature for response",
     )
     args = parser.parse_args()
+    
+    # Pulls API token from file
+    try:
+        with open("api-key.txt", "r") as file:
+            key = file.read().strip()
+
+    # Saves your API token in file for next time
+    except:
+        key = input("No API key found, please go to https://platform.openai.com/account/api-keys to generate one and paste it here to begin: ")
+        with open("api-key.txt", "w+") as file:
+            file.write(key)
+
     # Initialize chatbot
-    with open("api-key.txt", "r") as file:
-        key = file.read().strip()
     chatbot = Chatbot(api_key=key)    # put your API key here
     # Start chat
     mode = input("\nSelect Input Mode\nEnter 1 for Voice\nEnter 2 for Text\n\nMode:   ")
