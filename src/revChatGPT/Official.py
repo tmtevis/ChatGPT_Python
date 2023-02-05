@@ -439,12 +439,12 @@ def main():
 
     # Get API key from command line
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--api_key",
-        type=str,
-        required=True,
-        help="OpenAI API key",
-    )
+    # parser.add_argument(
+    #     "--api_key",
+    #     type=str,
+    #     required=True,
+    #     help="OpenAI API key",
+    # )
     parser.add_argument(
         "--stream",
         action="store_true",
@@ -456,13 +456,13 @@ def main():
         default=0.5,
         help="Temperature for response",
     )
-    # args = parser.parse_args()
+    args = parser.parse_args()
     # Initialize chatbot
-    chatbot = Chatbot(api_key="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")    # put your API key here
+    chatbot = Chatbot(api_key="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")    # put your API key here
     # Start chat
     while True:
         try:
-            prompt = get_input("\nPrompt:\n")
+            prompt = input("\nPrompt:   ")
         except KeyboardInterrupt:
             print("\nExiting...")
             sys.exit()
