@@ -471,7 +471,7 @@ def main():
             try:
                 with sr.Microphone() as source:
                     print("Speak your prompt, or say 'Stop Listening' to QUIT...")
-                    prompt_audio = r.listen(source, timeout=None)
+                    prompt_audio = r.listen(source, timeout=5)
                     try:
                         prompt = r.recognize_google(prompt_audio)
                         if(prompt == "stop listening"):     # add other command phrases here such as opening webpages

@@ -14,3 +14,4 @@ Python Setup:
     - pre-commit
     - tiktoken
     - SpeechRecognition
+    - PyAudio
