@@ -10,12 +10,18 @@ Pip3 v23.0: https://pip.pypa.io/en/stable/installation/
 
 Python Setup:
   Use "pip install --upgrade <library>" for the following:
+    
     - openai
+    
     - pre-commit
+    
     - tiktoken
+    
     - SpeechRecognition
+    
     - PyAudio
 
 
 Troubleshooting:
+    
     Google voice to text call sometimes doesn't work if using onboard laptop microphone. I've had the most luck using a gaming headset, bluetooth earbuds and wired.
