@@ -49,7 +49,7 @@ def chatGPT_main(config):
     print("Logging in...")
     chatbot = Chatbot(config)
     while True:
-        prompt = get_input("\nYou:\n")
+        prompt = get_input("\Tyler:\n")
         if prompt.startswith("!"):
             if prompt == "!help":
                 print(
@@ -107,14 +107,14 @@ def chatGPT_main(config):
 
 
 def main():
-    print(
-        """
-        ChatGPT - A command-line interface to OpenAI's ChatGPT (https://chat.openai.com/chat)
-        Repo: github.com/acheong08/ChatGPT
-        """,
-    )
-    print("Type '!help' to show a full list of commands")
-    print("Press enter twice to submit your question.\n")
+    # print(
+    #     """
+    #     ChatGPT - A command-line interface to OpenAI's ChatGPT (https://chat.openai.com/chat)
+    #     Repo: github.com/acheong08/ChatGPT
+    #     """,
+    # )
+    # print("Type '!help' to show a full list of commands")
+    # print("Press enter twice to submit your question.\n")
     chatGPT_main(configure())
 
 

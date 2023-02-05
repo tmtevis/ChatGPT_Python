@@ -367,14 +367,14 @@ class Conversation:
 
 
 def main():
-    print(
-        """
-    ChatGPT - A command-line interface to OpenAI's ChatGPT (https://chat.openai.com/chat)
-    Repo: github.com/acheong08/ChatGPT
-    """,
-    )
-    print("Type '!help' to show a full list of commands")
-    print("Press enter twice to submit your question.\n")
+    # print(
+    #     """
+    # ChatGPT - A command-line interface to OpenAI's ChatGPT (https://chat.openai.com/chat)
+    # Repo: github.com/acheong08/ChatGPT
+    # """,
+    # )
+    # print("Type '!help' to show a full list of commands")
+    # print("Press enter twice to submit your question.\n")
 
     def get_input(prompt):
         """
@@ -456,13 +456,13 @@ def main():
         default=0.5,
         help="Temperature for response",
     )
-    args = parser.parse_args()
+    # args = parser.parse_args()
     # Initialize chatbot
-    chatbot = Chatbot(api_key=args.api_key)
+    chatbot = Chatbot(api_key="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")    # put your API key here
     # Start chat
     while True:
         try:
-            prompt = get_input("\nUser:\n")
+            prompt = get_input("\nPrompt:\n")
         except KeyboardInterrupt:
             print("\nExiting...")
             sys.exit()
