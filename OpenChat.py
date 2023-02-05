@@ -7,6 +7,7 @@ import os
 import sys
 import threading
 from datetime import date
+from datetime import datetime
 
 try:
     import speech_recognition as sr
@@ -384,34 +385,77 @@ class Conversation:
 
 def main():
 
+    def extractCode(convertFile, filetype):
+        with open(convertFile, 'r') as file:
+            lines = file.readlines()
+        code_blocks = []
+        recording = False
+        for line in lines:
+            if line.strip() == "```":
+                recording = not recording
+            elif recording:
+                code_blocks.append(line)
+        file.close()
+        now = datetime.now()
+        timestr = now.strftime("%Y_%m_%d-%H_%M_%S")
+        fileName = "./Generated_Scripts/" + timestr + filetype
+        with open(fileName, "w+") as f:
+            for code_block in code_blocks:
+                f.write(code_block)
+        f.close()
+
+###################################################
+## Custom Commands
+###################################################
     def promptCommandCheck(prompt):
-        print("test")
+        global mode
+        createfile = "0"
+        commands = ["using python", "using C#", "using c sharp" "using html", "using javascript"]
+        filetypes = [".py", ".cs", ".cs", ".html", ".js"]
+
+
+        if prompt.startswith("!"):
+            if chatbot_commands(prompt):
+                return
+
+        for i, j in enumerate(commands):
+            if prompt.startswith(j):
+                createfile = "1"
+                fileExt = filetypes[i]
+
+        if "!switch-to-voice" in prompt:     # switch to voice input
+            mode = "1"
+            return
+        
+
+        if not args.stream:
+            response = chatbot.ask(prompt, temperature=args.temperature)
+            print("ChatGPT: " + response["choices"][0]["text"])
+            if(createfile == "1"):
+                with open("./Generated_Scripts/new_file.txt", "w+") as file:
+                    file.write(response["choices"][0]["text"])
+                file.close()
+                extractCode("./Generated_Scripts/new_file.txt", fileExt)
+        else:
+            print("ChatGPT: ")
+            sys.stdout.flush()
+            for response in chatbot.ask_stream(prompt, temperature=args.temperature):
+                print(response, end="")
+                sys.stdout.flush()
+            print()
+###################################################
+###################################################
+
 
     def textChatGPT():
         global mode
         while True:
             try:
                 prompt = input("\nPrompt (or !help for available commands):   ")
+                promptCommandCheck(prompt)
             except KeyboardInterrupt:
                 print("\nExiting...")
                 sys.exit()
-            if prompt.startswith("!"):
-                if chatbot_commands(prompt):
-                    continue
-            if "!switch-to-voice" in prompt:     # switch to voice input
-                mode = "1"
-                break
-            if not args.stream:
-                response = chatbot.ask(prompt, temperature=args.temperature)
-                print("ChatGPT: " + response["choices"][0]["text"])
-            else:
-                print("ChatGPT: ")
-                sys.stdout.flush()
-                for response in chatbot.ask_stream(prompt, temperature=args.temperature):
-                    print(response, end="")
-                    sys.stdout.flush()
-                print()
-
     
     def voiceChatGPT():
         global mode
@@ -463,6 +507,9 @@ def main():
             !save_f <file_name> - Save all conversations to a file
             !load_f <file_name> - Load all conversations from a file
             !exit - Quit chat
+
+            Productivity:
+            "using..." followed by "python" "C#" "c sharp" "javascript" "html" will generate timestamped files of usable code
             """,
             )
         elif cmd == "!exit":
