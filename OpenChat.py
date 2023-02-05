@@ -461,24 +461,26 @@ def main():
     )
     args = parser.parse_args()
     # Initialize chatbot
-    chatbot = Chatbot(api_key="")    # put your API key here
+    with open("api-key.txt", "r") as file:
+        key = file.read().strip()
+    chatbot = Chatbot(api_key=key)    # put your API key here
     # Start chat
     while True:
         try:
-            with sr.Microphone() as source:
-                print("Speak your prompt, or say 'Stop Listening' to QUIT...")
-                prompt_audio = r.listen(source, timeout=None)
-                try:
-                    prompt = r.recognize_google(prompt_audio)
-                    if(prompt == "stop listening"):     # add other command phrases here such as opening webpages
-                        print("\nExiting...")
-                        break
-                    if(prompt == "text input"):     # switch to text input for using built-in commands such as saving conversations
-                        prompt = input("\nPrompt:   ")
-                except:
-                    print("Sorry, I didn't understand that.")
+        #     with sr.Microphone() as source:
+        #         print("Speak your prompt, or say 'Stop Listening' to QUIT...")
+        #         prompt_audio = r.listen(source, timeout=None)
+        #         try:
+        #             prompt = r.recognize_google(prompt_audio)
+        #             if(prompt == "stop listening"):     # add other command phrases here such as opening webpages
+        #                 print("\nExiting...")
+        #                 break
+        #             if(prompt == "text input"):     # switch to text input for using built-in commands such as saving
+        #                 prompt = input("\nPrompt:   ")
+        #         except:
+        #             print("Sorry, I didn't understand that.")
                     
-            # prompt = input("\nPrompt:   ")
+            prompt = input("\nPrompt:   ")
         except KeyboardInterrupt:
             print("\nExiting...")
             sys.exit()
