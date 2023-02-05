@@ -2,10 +2,7 @@
  Interacting with ChatGPT via Python
 
 
-Run Official.py with --api_key as argument.
-
-Mine is: "c:\Users\Tyler\Desktop\Engineering\_ChatGPT\ChatGPT\ChatGPT_Python\src\revChatGPT\Official.py" --api_key sk-Evu4WeSJfpI15KnJGOGCT3BlbkFJ
-
+Run Official.py and fill in your API token on (or around) line 464 to begin.
 
 TO DO:
 
