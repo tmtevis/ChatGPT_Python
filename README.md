@@ -1,9 +1,7 @@
 # ChatGPT_Python
- Interacting with ChatGPT via Python
+Interacting with ChatGPT via Python using voice-to-text or just text chat!
 
+Run OpenChat.py and fill in your API token where chatbot is instantiated before the main while True loop. Just tell it to "stop listening" when you are finished with your conversation!
 
-Run Official.py and fill in your API token on (or around) line 464 to begin.
-
-TO DO:
-
-- Change how prompt is handled -- input via voice dictation!
+Requirements:
+ChatGPT API Key: https://platform.openai.com/account/api-keys
