@@ -466,8 +466,12 @@ def main():
     while True:
         try:
             with sr.Microphone() as source:
-                prompt_audio = r.listen(source)
-                prompt = r.recognize_google(prompt_audio)
+                print("Listening...")
+                prompt_audio = r.listen(source, timeout=5)
+                try:
+                    prompt = r.recognize_google(prompt_audio)
+                except:
+                    print("Sorry, I didn't understand that.")
             # prompt = input("\nPrompt:   ")
         except KeyboardInterrupt:
             print("\nExiting...")
