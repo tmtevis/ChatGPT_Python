@@ -461,7 +461,7 @@ def main():
             return
         
         if "stop listening" in prompt:
-            print("\nExiting...")
+            print("\nvoiceChatGPT Exiting...")
             mode = ""
             return
         
@@ -503,13 +503,16 @@ def main():
 
     def textChatGPT():
         global mode
+        global response
         while (mode == "2"):
             try:
                 prompt = input("\nPrompt (or !help for available commands):   ")
                 promptCommandCheck(prompt)
             except KeyboardInterrupt:
-                print("\nExiting...")
-                sys.exit()
+                response = ""
+                print("\ntextChatGPT Exiting...")
+                mode = ""
+                return
     
 
     def voiceChatGPT():
@@ -618,22 +621,29 @@ def main():
     chatbot = Chatbot(api_key=key)    # put your API key here
     # Start chat
     while(True):
-        global mode
-        if(mode==""):
-            mode = input("\nSelect Input Mode\nEnter 1 for Voice\nEnter 2 for Text\nEnter 3 to Quit\n\nMode:   ")
-            if mode.isdigit():
-                continue
+        try:
+            global mode
+            global response
+            response = None
+            if(mode==""):
+                mode = input("\nSelect Input Mode\nEnter 1 for Voice\nEnter 2 for Text\nEnter 3 to Quit\n\nMode:   ")
+                if mode.isdigit():
+                    continue
+                else:
+                    print("\nInvalid Entry. Try Again")
+                    mode = ""
+            if(mode == "1"):
+                voiceChatGPT()
+            elif(mode == "2"):
+                textChatGPT()
+            elif(mode == "3"):
+                break
             else:
-                print("\nInvalid Entry. Try Again")
                 mode = ""
-        if(mode == "1"):
-            voiceChatGPT()
-        elif(mode == "2"):
-            textChatGPT()
-        elif(mode == "3"):
-            break
-        else:
-            mode = ""
+        
+        except KeyboardInterrupt:
+            print("\nExiting...")
+            sys.exit()
     ##########################################################
 
 if __name__ == "__main__":
