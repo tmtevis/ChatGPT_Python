@@ -386,7 +386,7 @@ class Conversation:
 
 def main():
 
-    def extractCode(convertFile, filetype):
+    def extractCode(prompt, convertFile, filetype):
         with open(convertFile, 'r') as file:
             lines = file.readlines()
         code_blocks = []
@@ -401,6 +401,7 @@ def main():
         timestr = now.strftime("%Y_%m_%d-%H_%M_%S")
         fileName = "./Generated_Scripts/" + timestr + filetype
         with open(fileName, "w+") as f:
+            f.write("#Original Prompt: " + prompt + "\n")
             for code_block in code_blocks:
                 f.write(code_block)
         f.close()
@@ -462,7 +463,7 @@ def main():
                 with open("./Generated_Scripts/new_file.txt", "w+") as file:
                     file.write(response["choices"][0]["text"])
                 file.close()
-                extractCode("./Generated_Scripts/new_file.txt", fileExt)
+                extractCode(prompt, "./Generated_Scripts/new_file.txt", fileExt)
         else:
             print("ChatGPT: ")
             sys.stdout.flush()
