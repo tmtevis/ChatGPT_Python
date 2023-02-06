@@ -457,7 +457,7 @@ def main():
             Available Voice Commands:
             "stop listening" - stop listening and go back to main menu
             "switch to text" - swap to text input for prompt
-            "using..." followed by "python" "c sharp" "javascript" "html" "batch" will generate timestamped files of usable code
+            "using..." followed by "python" "c sharp" "javascript" "html" "batch" "c plus plus" will generate timestamped files of usable code
             """,
             )
             mode = ""
@@ -534,8 +534,14 @@ def main():
             !load_f <file_name> - Load all conversations from a file
             !exit - Quit chat
 
-            Productivity:
-            "using..." followed by "python" "C#" "c sharp" "javascript" "html" will generate timestamped files of usable code
+            ~~Productivity~~
+            
+            Text-based Script Generating:
+            Begin prompt with "using" followed by "python" "C#" "javascript" "html" "css" "batch" "c++" to generate scripts with correct extensions.
+            These commands should also work when using voice, assuming the Google interpreter outputs the correct voice-to-text translation.
+            
+            All generated scripts will output to a ./Generated_Scripts folder within your current path.
+            
             """,
             )
         elif cmd == "!exit":
