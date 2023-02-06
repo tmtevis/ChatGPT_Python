@@ -15,7 +15,7 @@ try:
     import tiktoken
 except ImportError:
     import pip
-    pip.main(['install', 'speech_recognition'])
+    pip.main(['install', 'SpeechRecognition'])
     pip.main(['install', 'PyAudio'])
     pip.main(['install', 'openai'])
     pip.main(['install', 'tiktoken'])
@@ -590,7 +590,7 @@ def main():
             if mode.isdigit():
                 continue
             else:
-                print("\nInvalid Entry Type. Try Again")
+                print("\nInvalid Entry. Try Again")
                 mode = ""
         if(mode == "1"):
             voiceChatGPT()
