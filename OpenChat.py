@@ -32,6 +32,13 @@ ENGINE = os.environ.get("GPT_ENGINE") or "text-chat-davinci-002-20221122"
 
 ENCODER = tiktoken.get_encoding("gpt2")
 
+folder_name = "Generated_Scripts"
+current_path = os.getcwd()
+folder_path = os.path.join(current_path, folder_name)
+
+if not os.path.exists(folder_path):
+    os.makedirs(folder_path)
+
 
 def get_max_tokens(prompt: str) -> int:
     """
