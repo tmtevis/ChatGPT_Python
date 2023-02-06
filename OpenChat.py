@@ -25,6 +25,7 @@ except ImportError:
     import tiktoken
 
 mode = ""
+fileExt = ""
 r = sr.Recognizer()
 
 ENGINE = os.environ.get("GPT_ENGINE") or "text-chat-davinci-002-20221122"
@@ -409,9 +410,11 @@ def main():
 ###################################################
     def promptCommandCheck(prompt):
         global mode
+        global fileExt
         createfile = "0"
-        commands = ["using python", "using C#", "using c sharp" "using html", "using javascript", "using batch"]
-        filetypes = [".py", ".cs", ".cs", ".html", ".js", ".bat"]
+
+        commands = ["using python", "using C#", "using c sharp", "using html", "using javascript", "using batch", "using c++", "using c plus plus", "using css"]
+        filetypes = [".py", ".cs", ".cs", ".html", ".js", ".bat", ".cpp", ".cpp", ".css"]
 
         if prompt.startswith("!"):
             if chatbot_commands(prompt):
@@ -421,6 +424,9 @@ def main():
             if prompt.startswith(j):
                 createfile = "1"
                 fileExt = filetypes[i]
+                print("Generating " + fileExt + " file...")
+                continue
+
 
         if "!switch-to-voice" in prompt:
             mode = "1"
