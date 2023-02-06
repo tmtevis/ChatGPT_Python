@@ -6,6 +6,7 @@ import json
 import os
 import sys
 import threading
+import time
 from datetime import date
 from datetime import datetime
 
@@ -25,6 +26,7 @@ except ImportError:
     import tiktoken
 
 mode = ""
+response = None
 fileExt = ""
 r = sr.Recognizer()
 
@@ -413,6 +415,18 @@ def main():
                 f.write(code_block)
         f.close()
 
+
+    def loading_animation():
+        global response
+        check_response = response
+        i = 1
+        while(check_response==None):
+            check_response = response
+            sys.stdout.write("\rElapsed Time (s): %d" % i)
+            sys.stdout.flush()
+            time.sleep(1)
+            i=i+1
+
 ###################################################
 ## Custom Commands
 ###################################################
@@ -420,7 +434,7 @@ def main():
         global mode
         global fileExt
         createfile = "0"
-
+        global response
         commands = ["using python", "using C#", "using c sharp", "using html", "using javascript", "using batch", "using c++", "using c plus plus", "using css"]
         filetypes = [".py", ".cs", ".cs", ".html", ".js", ".bat", ".cpp", ".cpp", ".css"]
 
@@ -463,14 +477,19 @@ def main():
             mode = ""
             return
 
-        if not args.stream:
+        if not args.stream:  
+            animation_thread = threading.Thread(target=loading_animation)
+            animation_thread.start()
             response = chatbot.ask(prompt, temperature=args.temperature)
-            print("ChatGPT: " + response["choices"][0]["text"])
+            animation_thread.join()
+            print("\nChatGPT: " + response["choices"][0]["text"])
             if(createfile == "1"):
                 with open("./Generated_Scripts/new_file.txt", "w+") as file:
                     file.write(response["choices"][0]["text"])
                 file.close()
                 extractCode(prompt, "./Generated_Scripts/new_file.txt", fileExt)
+            response = None
+    
         else:
             print("ChatGPT: ")
             sys.stdout.flush()
@@ -532,7 +551,7 @@ def main():
             !load_c <conversation_name> - Load history from a conversation
             !save_f <file_name> - Save all conversations to a file
             !load_f <file_name> - Load all conversations from a file
-            !exit - Quit chat
+            !exit - Exit program
 
             ~~Productivity~~
             
