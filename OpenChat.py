@@ -540,6 +540,8 @@ def main():
             Begin prompt with "using" followed by "python" "C#" "javascript" "html" "css" "batch" "c++" to generate scripts with correct extensions.
             These commands should also work when using voice, assuming the Google interpreter outputs the correct voice-to-text translation.
             
+                EXAMPLE: "using python, create a script that writes 'hello world'"
+
             All generated scripts will output to a ./Generated_Scripts folder within your current path.
             
             """,
