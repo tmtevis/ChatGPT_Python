@@ -401,7 +401,7 @@ def main():
         timestr = now.strftime("%Y_%m_%d-%H_%M_%S")
         fileName = "./Generated_Scripts/" + timestr + filetype
         with open(fileName, "w+") as f:
-            f.write("#Original Prompt: " + prompt + "\n")
+            f.write("# Original Prompt: " + prompt + "\n")
             for code_block in code_blocks:
                 f.write(code_block)
         f.close()
@@ -586,11 +586,20 @@ def main():
     while(True):
         global mode
         if(mode==""):
-            mode = input("\nSelect Input Mode\nEnter 1 for Voice\nEnter 2 for Text\n\nMode:   ")
+            mode = input("\nSelect Input Mode\nEnter 1 for Voice\nEnter 2 for Text\nEnter 3 to Quit\n\nMode:   ")
+            if mode.isdigit():
+                continue
+            else:
+                print("\nInvalid Entry Type. Try Again")
+                mode = ""
         if(mode == "1"):
             voiceChatGPT()
         elif(mode == "2"):
             textChatGPT()
+        elif(mode == "3"):
+            break
+        else:
+            mode = ""
     ##########################################################
 
 if __name__ == "__main__":
