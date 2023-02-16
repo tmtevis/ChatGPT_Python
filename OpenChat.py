@@ -7,6 +7,7 @@ import os
 import sys
 import threading
 import time
+import webbrowser
 from datetime import date
 from datetime import datetime
 
@@ -30,7 +31,7 @@ response = None
 fileExt = ""
 r = sr.Recognizer()
 
-ENGINE = os.environ.get("GPT_ENGINE") or "text-chat-davinci-002-20221122"
+ENGINE = os.environ.get("GPT_ENGINE") or "text-davinci-003"
 
 ENCODER = tiktoken.get_encoding("gpt2")
 
@@ -500,6 +501,62 @@ def main():
 ###################################################
 ###################################################
 
+    def DALLE_AI_menu():
+        global mode
+        global response
+        while(mode == "3"):
+            choice = input("\nEnter 1 to GENERATE an image, or 2 to create a VARIATION of an existing image or 3 to QUIT: ")
+            if(choice==""):
+                choice = input("\nEnter 1 to GENERATE an image, or 2 to create a VARIATION of an existing image or 3 to QUIT: ")
+                if choice.isdigit():
+                    continue
+                else:
+                    print("\nInvalid Entry. Try Again")
+                    choice = ""
+
+            if(choice == "1"):
+                try:
+                    # generate an image:
+                    img_prompt = input("Describe your image: ")
+                    animation_thread = threading.Thread(target=loading_animation)
+                    animation_thread.start()
+                    response = openai.Image.create(
+                        prompt=img_prompt,
+                        n=1,
+                        size="1024x1024"
+                    )
+                    animation_thread.join()
+                    image_url = response['data'][0]['url']
+                    print(image_url) 
+                    webbrowser.open_new_tab(image_url)
+                except openai.error.OpenAIError as e:
+                    print(e.http_status)
+                    print(e.error)
+
+            if(choice == "2"):
+                try:
+                    # image variation:
+                    fileName = input("Input image file name (with path): ")
+                    animation_thread = threading.Thread(target=loading_animation)
+                    animation_thread.start()
+                    response = openai.Image.create_variation(
+                        image=open(fileName, "rb"),
+                        n=1,
+                        size="1024x1024"
+                    )
+                    animation_thread.join()
+                    image_url = response['data'][0]['url']
+                    print(image_url)
+                    webbrowser.open_new_tab(image_url)
+                except openai.error.OpenAIError as e:
+                                print(e.http_status)
+                                print(e.error)
+
+            if(choice == "3"):
+                print("\nDALLE Exiting...")
+                response = ""
+                mode = ""
+                return
 
     def textChatGPT():
         global mode
@@ -626,7 +683,7 @@ def main():
             global response
             response = None
             if(mode==""):
-                mode = input("\nSelect Input Mode\nEnter 1 for Voice\nEnter 2 for Text\nEnter 3 to Quit\n\nMode:   ")
+                mode = input("\nSelect Input Mode\nEnter 1 for Voice\nEnter 2 for Text\nEnter 3 for DALLE Image Generation\nEnter 4 to Quit\n\nMode:   ")
                 if mode.isdigit():
                     continue
                 else:
@@ -637,6 +694,8 @@ def main():
             elif(mode == "2"):
                 textChatGPT()
             elif(mode == "3"):
+                DALLE_AI_menu()
+            elif(mode == "4"):
                 break
             else:
                 mode = ""
